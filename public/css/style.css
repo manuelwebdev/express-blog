@@ -23,6 +23,8 @@ a {
 }
 h1 {
   font-size: var(--font-size-xl);
+  line-height: calc(var(--font-size-xl) * 1.25);
+  margin: 0;
 }
 h2 {
   font-size: var(--font-size-lg);
@@ -153,20 +155,20 @@ h3 {
 
 /* Author */
 .author {
-  padding: 10px 0;
+  padding: 2.25rem 0;
   text-align: center;
 }
 .author_heading {
   margin-top: 10px;
   margin-bottom: 5px;
 }
-.author_body {
+.author__body {
   font-size: var(--font-size-md);
   margin: 5px 0 40px 0;
 }
 
 /* Home Article List */
-.article____heading {
+.article__heading {
   margin-top: 4rem;
   font-weight: 400;
 }
@@ -260,6 +262,13 @@ h3 {
   right: 0;
   color: var(--gray-light);
   padding: 15px;
+}
+
+/* Dashboard Admin */
+.admin-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin-posts {

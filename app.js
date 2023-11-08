@@ -3,6 +3,10 @@ config()
 import express from 'express'
 import expressLayout from 'express-ejs-layouts'
 import router from './server/routes/main.js'
+import connectDB from './server/config/db.js'
+
+// connect to mongoDB
+connectDB()
 
 // define our app using express
 const app = express()
