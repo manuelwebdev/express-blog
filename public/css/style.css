@@ -94,6 +94,7 @@ h3 {
   grid-template-areas:
     'logo button'
     'menu menu';
+  padding: 0.75rem 0;
 }
 
 .header__logo {
@@ -237,31 +238,37 @@ h3 {
 
 /* Search */
 .searchBar {
-  visibility: hidden;
-  transform: translateY(-100px);
+  transition: all 0.35s ease-in-out;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
   background-color: var(--black);
+}
+.searchBar.open {
+  height: 40px;
   padding: 4px 0;
-  position: absolute;
-  left: 0;
-  right: 0;
+  transition: all 0.7s ease-in-out;
 }
 
-.searchBar.open {
-  transform: translateY(0);
-  transition: transform 0.1s;
+.searchBar .container {
+  display: grid;
+  grid-template-columns: 1fr 45px;
+  gap: 0.25rem;
+}
+.search__form {
+  width: 100%;
 }
 
 .searchBar input {
+  height: 40px;
   margin: 0;
   padding: 0;
 }
 
 #searchClose {
-  position: absolute;
-  top: 0;
-  right: 0;
   color: var(--gray-light);
-  padding: 15px;
+  cursor: pointer;
+  align-self: center;
 }
 
 /* Dashboard Admin */

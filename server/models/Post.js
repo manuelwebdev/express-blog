@@ -1,13 +1,13 @@
 import { Schema, model } from 'mongoose'
 
 // create our schema
-const postSchema = new Schema({
+const PostSchema = new Schema({
   title: { type: String, required: true },
   body: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 })
 
-const Post = model('Post', postSchema)
+const Post = model('Post', PostSchema)
 
 export default Post
