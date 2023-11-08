@@ -6,14 +6,34 @@ const router = express.Router()
 // ROUTES
 
 // GET - HOME
-router.get('', (req, res) => {
-  const locals = {
-    title: 'Home blog',
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipiscing elit montes pulvinar habitasse porta, hendrerit volutpat hac posuere blandit interdum suspendisse mi ligula. Curabitur tempus vitae pellentesque donec mi per auctor etiam elementum dui, arcu augue urna rhoncus natoque dignissim lacus sollicitudin pulvinar magnis, aenean pharetra felis blandit iaculis justo erat ultricies duis. ',
-  }
+router.get('', async (req, res) => {
+  try {
+    const locals = {
+      title: 'Home blog',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
+    }
+    let perPage = 10
+    let page = req.query.page || 1
 
-  res.render('index', { locals })
+    const posts = await Post.aggregate({ $sort: { createdAt: -1 } })
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec()
+
+    const count = await Post.countDocuments()
+    const nextPage = parseInt(page) + 1
+    const hasNextPage = nextPage <= Math.ceil(count / perPage)
+
+    res.render('index', {
+      locals,
+      posts,
+      current: page,
+      nextPage: hasNextPage ? nextPage : null,
+    })
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 router.get('/about', (req, res) => {
@@ -23,24 +43,36 @@ router.get('/about', (req, res) => {
 // Exports
 export default router
 
+// ? POPULATE DATA
 // const populatePostData = async () => {
 //   Post.insertMany([
 //     {
-//       title: 'Starting a blog',
-//       body: 'This is my first blog',
+//       title: 'Tech Trends and Innovations',
+//       body: 'Stay updated on the latest tech trends and groundbreaking innovations in the world of technology.',
 //     },
 //     {
-//       title: 'Exploring the Great Outdoors',
-//       body: "In this blog, I'll share my adventures and experiences in the wilderness.",
+//       title: 'Health and Wellness',
+//       body: 'Explore the path to a healthier lifestyle and well-being through my personal experiences and tips.',
 //     },
 //     {
-//       title: 'Traveling the World',
-//       body: 'Join me on a journey around the globe as I visit amazing destinations and meet new cultures.',
-//     },
-//     {
-//       title: 'The Art of Cooking',
-//       body: 'Discover the world of culinary delights as I explore new recipes and cooking techniques.',
+//       title: 'A Journey Through Literature',
+//       body: "Let's dive into the world of books, exploring different genres and authors that have captivated my imagination.",
 //     },
 //   ])
 // }
 // populatePostData()
+
+// ? GET - POSTS
+// router.get('', async (req, res) => {
+//   const locals = {
+//     title: 'Home blog',
+//     description:
+//       'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
+//   }
+//   try {
+//     const posts = await Post.find()
+//     res.render('index', { locals, posts })
+//   } catch (error) {
+//     console.log(error)
+//   }
+// })

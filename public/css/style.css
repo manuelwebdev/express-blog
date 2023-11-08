@@ -181,7 +181,7 @@ h3 {
   flex-direction: column;
 }
 
-.article-list_date {
+.article-list__date {
   font-size: var(--font-size-base);
   color: var(--gray);
   width: 260px;
