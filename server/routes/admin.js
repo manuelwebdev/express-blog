@@ -29,7 +29,12 @@ adminRouter.get('/admin', async (req, res) => {
 adminRouter.post('/admin', async (req, res) => {
   try {
     const { username, password } = req?.body
-    console.log(req.body)
+
+    if (req?.body?.user === 'admin' && req.body.password === 'password') {
+      res.send('logged in')
+    } else {
+      res.send('invalid credentials')
+    }
 
     res.redirect('/admin')
   } catch (error) {
