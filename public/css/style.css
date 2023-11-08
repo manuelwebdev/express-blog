@@ -24,7 +24,7 @@ a {
 h1 {
   font-size: var(--font-size-xl);
   line-height: calc(var(--font-size-xl) * 1.25);
-  margin: 0;
+  margin: 3rem 0 1rem 0;
 }
 h2 {
   font-size: var(--font-size-lg);

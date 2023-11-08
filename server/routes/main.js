@@ -5,7 +5,9 @@ const router = express.Router()
 
 // ROUTES
 
-// GET - HOME
+/*** GET
+ * HOME - POSTS
+ */
 router.get('', async (req, res) => {
   try {
     const locals = {
@@ -31,6 +33,25 @@ router.get('', async (req, res) => {
       current: page,
       nextPage: hasNextPage ? nextPage : null,
     })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+/** GET
+ * Post :id
+ */
+router.get('/post/:id', async (req, res) => {
+  try {
+    let slug = req.params.id
+
+    const post = await Post.findById({ _id: slug })
+    const locals = {
+      title: post?.title,
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
+    }
+    res.render('post', { locals, post })
   } catch (error) {
     console.log(error)
   }
