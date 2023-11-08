@@ -1,8 +1,11 @@
 import express from 'express'
+import Post from '../models/Post.js'
 
 const router = express.Router()
 
-// Routes
+// ROUTES
+
+// GET - HOME
 router.get('', (req, res) => {
   const locals = {
     title: 'Home blog',
@@ -19,3 +22,25 @@ router.get('/about', (req, res) => {
 
 // Exports
 export default router
+
+// const populatePostData = async () => {
+//   Post.insertMany([
+//     {
+//       title: 'Starting a blog',
+//       body: 'This is my first blog',
+//     },
+//     {
+//       title: 'Exploring the Great Outdoors',
+//       body: "In this blog, I'll share my adventures and experiences in the wilderness.",
+//     },
+//     {
+//       title: 'Traveling the World',
+//       body: 'Join me on a journey around the globe as I visit amazing destinations and meet new cultures.',
+//     },
+//     {
+//       title: 'The Art of Cooking',
+//       body: 'Discover the world of culinary delights as I explore new recipes and cooking techniques.',
+//     },
+//   ])
+// }
+// populatePostData()

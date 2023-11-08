@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 // create our schema
 const postSchema = new Schema({
@@ -8,4 +8,6 @@ const postSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 })
 
-export default postSchema
+const Post = model('Post', postSchema)
+
+export default Post
