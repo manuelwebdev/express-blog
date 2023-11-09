@@ -1,10 +1,14 @@
 import express from 'express'
 import Post from '../models/Post.js'
 import User from '../models/User.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const adminRouter = express.Router()
-
 const adminLayout = '../views/layouts/admin'
+const jwtSecret = process.env.JWT_SECRET
 
 /** GET
  * Admin - Login page
@@ -29,16 +33,52 @@ adminRouter.get('/admin', async (req, res) => {
 adminRouter.post('/admin', async (req, res) => {
   try {
     const { username, password } = req?.body
+    const user = await User.findOne({ username })
+    const INVALID_CREDENTIALS = { message: 'Invalid credentials' }
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const token = jwt.sign({ userId: user._id }, jwtSecret)
 
-    if (req?.body?.user === 'admin' && req.body.password === 'password') {
-      res.send('logged in')
-    } else {
-      res.send('invalid credentials')
+    if (!isPasswordValid || !user) {
+      return res.status(401).json(INVALID_CREDENTIALS)
     }
-
-    res.redirect('/admin')
+    res.cookie('token', token, { httpOnly: true })
+    res.redirect('/dashboard')
   } catch (error) {
     console.log(error)
+  }
+})
+
+/** POST
+ * Admin - Register
+ */
+adminRouter.get('/dashboard', async (req, res) => {
+  res.render('admin/dashboard')
+})
+
+/** POST
+ * Admin - Register
+ */
+adminRouter.post('/register', async (req, res) => {
+  try {
+    const { username, password } = req?.body
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const user = await User.create({
+      username,
+      password: hashedPassword,
+    })
+    res.status(201).json({
+      message: 'User created successfully',
+      user,
+    })
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: 'Username already exists',
+      })
+    }
+    res.status(500).json({
+      message: 'Internal server error',
+    })
   }
 })
 

@@ -3,8 +3,11 @@ config()
 import express from 'express'
 import expressLayout from 'express-ejs-layouts'
 import router from './server/routes/main.js'
-import connectDB from './server/config/db.js'
 import adminRouter from './server/routes/admin.js'
+import connectDB from './server/config/db.js'
+import cookieParser from 'cookie-parser'
+import MongoStore from 'connect-mongo'
+import session from 'express-session'
 
 // connect to mongoDB
 connectDB()
@@ -16,6 +19,21 @@ const PORT = process.env.PORT || 3000
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(cookieParser())
+
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_DB_URI,
+    }),
+    // cookie: {
+    //   maxAge: new Date(Date.now() + 1000 * 60 * 60 * 24)
+    // }
+  })
+)
 
 // define our template engine
 app.use(expressLayout)
