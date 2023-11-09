@@ -70,11 +70,58 @@ adminRouter.post('/admin', async (req, res) => {
   }
 })
 
-/** POST
- * Admin - Register
+/** GET
+ * Admin - Dashboard
  */
 adminRouter.get('/dashboard', authMiddleware, async (req, res) => {
-  res.render('admin/dashboard')
+  try {
+    const locals = {
+      title: 'Admin Dashboard',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
+    }
+
+    const data = await Post.find()
+    res.render('admin/dashboard', { locals, data, layout: adminLayout })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+/** GET
+ * Admin - Create New Post
+ */
+adminRouter.get('/add-post', authMiddleware, async (req, res) => {
+  try {
+    const locals = {
+      title: 'Add New Post',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
+    }
+
+    const data = await Post.find()
+    res.render('admin/add-post', { locals, data })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+/** GET
+ * Admin - Create New Post
+ */
+adminRouter.post('/add-post', authMiddleware, async (req, res) => {
+  try {
+    const { title = 'default title', body = 'Lorem Ipsum' } = req.body
+    const newPost = new Post({
+      title: title,
+      body: body,
+    })
+    await Post.create(newPost)
+
+    res.redirect('/dashboard')
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 /** POST
