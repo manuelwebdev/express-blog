@@ -70,6 +70,33 @@ adminRouter.post('/admin', async (req, res) => {
   }
 })
 
+/** POST
+ * Admin - Register
+ */
+adminRouter.post('/register', async (req, res) => {
+  try {
+    const { username, password } = req?.body
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const user = await User.create({
+      username,
+      password: hashedPassword,
+    })
+    res.status(201).json({
+      message: 'User created successfully',
+      user,
+    })
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: 'Username already exists',
+      })
+    }
+    res.status(500).json({
+      message: 'Internal server error',
+    })
+  }
+})
+
 /** GET
  * Admin - Dashboard
  */
@@ -124,30 +151,62 @@ adminRouter.post('/add-post', authMiddleware, async (req, res) => {
   }
 })
 
-/** POST
- * Admin - Register
+/** PUT
+ * Admin - EDIT Post
  */
-adminRouter.post('/register', async (req, res) => {
+adminRouter.put('/edit-post/:id', authMiddleware, async (req, res) => {
   try {
-    const { username, password } = req?.body
-    const hashedPassword = await bcrypt.hash(password, 10)
-    const user = await User.create({
-      username,
-      password: hashedPassword,
+    await Post.findByIdAndUpdate(req.params.id, {
+      title: req?.body?.title,
+      body: req?.body?.body,
+      updatedAt: Date.now(),
     })
-    res.status(201).json({
-      message: 'User created successfully',
-      user,
-    })
+
+    res.redirect(`/edit-post/${req.params.id}`)
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        message: 'Username already exists',
-      })
+    console.log(error)
+  }
+})
+
+/** GET
+ * Admin - EDIT Post page
+ */
+adminRouter.get('/edit-post/:id', authMiddleware, async (req, res) => {
+  try {
+    const locals = {
+      title: 'Edit Post',
+      description:
+        'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
     }
-    res.status(500).json({
-      message: 'Internal server error',
-    })
+    const post = await Post.findById({ _id: req?.params?.id })
+
+    res.render(`admin/edit-post`, { locals, post, layout: adminLayout })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+/** DELETE
+ * Admin - DELETE Post
+ */
+adminRouter.delete('/delete-post/:id', authMiddleware, async (req, res) => {
+  try {
+    await Post.deleteOne({ _id: req.params.id })
+    res.redirect(`/dashboard`)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+/** GET
+ * Admin - Logout
+ */
+adminRouter.get('/logout', authMiddleware, async (req, res) => {
+  try {
+    res.clearCookie('token')
+    res.redirect('/')
+  } catch (error) {
+    console.log(error)
   }
 })
 

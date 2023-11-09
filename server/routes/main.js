@@ -32,6 +32,7 @@ router.get('', async (req, res) => {
       posts,
       current: page,
       nextPage: hasNextPage ? nextPage : null,
+      currentRoute: '/',
     })
   } catch (error) {
     console.log(error)
@@ -51,7 +52,7 @@ router.get('/post/:id', async (req, res) => {
       description:
         'Lorem ipsum dolor sit amet consectetur adipiscing elit montes.',
     }
-    res.render('post', { locals, post })
+    res.render('post', { locals, post, currentRoute: `/posts/${slug}` })
   } catch (error) {
     console.log(error)
   }
@@ -85,7 +86,7 @@ router.post('/search', async (req, res) => {
 })
 
 router.get('/about', (req, res) => {
-  res.render('about')
+  res.render('about', { currentRoute: '/about' })
 })
 
 // Exports
