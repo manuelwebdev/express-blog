@@ -10,6 +10,28 @@ const adminRouter = express.Router()
 const adminLayout = '../views/layouts/admin'
 const jwtSecret = process.env.JWT_SECRET
 
+/**
+ * Check login - Guard
+ */
+const authMiddleware = (req, res, next) => {
+  const token = req?.cookies?.token
+
+  if (!token) {
+    return res.status(401).json({
+      message: 'Unauthorized',
+    })
+  }
+  try {
+    const decoded = jwt.verify(token, jwtSecret)
+    req.userId = decoded.userId
+    next()
+  } catch (error) {
+    return res.status(401).json({
+      message: 'Unauthorized',
+    })
+  }
+}
+
 /** GET
  * Admin - Login page
  */
@@ -51,7 +73,7 @@ adminRouter.post('/admin', async (req, res) => {
 /** POST
  * Admin - Register
  */
-adminRouter.get('/dashboard', async (req, res) => {
+adminRouter.get('/dashboard', authMiddleware, async (req, res) => {
   res.render('admin/dashboard')
 })
 
