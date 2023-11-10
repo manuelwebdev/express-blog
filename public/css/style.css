@@ -102,6 +102,7 @@ h3 {
   font-weight: 800;
   font-size: calc(var(--font-size-base) * 1.25);
   text-decoration: none;
+  text-transform: uppercase;
 }
 .header__button {
   grid-area: button;
@@ -127,7 +128,7 @@ h3 {
 .header__nav {
   grid-area: menu;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .header__nav ul {
   display: flex;
@@ -151,7 +152,7 @@ h3 {
   color: var(--gray);
 }
 .header__nav ul li a.active {
-  text-decoration: underline var(--red) 2px;
+  text-decoration: underline var(--gray) 2px;
 }
 
 /* Author */
@@ -187,6 +188,7 @@ h3 {
   color: var(--gray);
   width: 260px;
   display: inline-block;
+  text-align: end;
 }
 
 .article-ul li a {
